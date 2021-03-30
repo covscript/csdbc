@@ -1,4 +1,5 @@
 {
+    "Type": "Package",
     "Name": "csdbc",
     "Info": "CovScript Database Connectivity Header",
     "Author": "CovScript Organization",

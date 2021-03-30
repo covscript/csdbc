@@ -1,4 +1,5 @@
 {
+    "Type": "Package",
     "Name": "csdbc_sqlite",
     "Info": "CSDBC SQLite3 Driver",
     "Author": "CovScript Organization",

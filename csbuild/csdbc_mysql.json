@@ -1,4 +1,5 @@
 {
+    "Type": "Package",
     "Name": "csdbc_mysql",
     "Info": "CSDBC MySQL Driver",
     "Author": "CovScript Organization",
