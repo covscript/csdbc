@@ -1,0 +1,37 @@
+package csdbc
+
+constant sql_int = "INT"
+constant sql_real = "REAL"
+constant sql_text = "TEXT"
+
+class statement_base
+    function done()
+        return true
+    end
+    function exec()
+        return null
+    end
+    function just_exec()
+    end
+    function bind(idx, str)
+    end
+end
+
+class database_base
+    var typenames = null
+    var typenames_full = null
+    function prepare(sql)
+        return null
+    end
+    function exec(sql)
+        return null
+    end
+    function just_exec(sql)
+    end
+    function table_list()
+        return null
+    end
+    function column_info(table)
+        return null
+    end
+end

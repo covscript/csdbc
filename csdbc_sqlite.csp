@@ -1,0 +1,121 @@
+#
+# CovScript Database Connectivity: SQLite3 implementation
+#
+
+package csdbc_sqlite
+
+import sqlite
+import csdbc
+import regex
+
+struct record
+    var name=null
+    var type=null
+    var data=null
+    var sql_type=null
+end
+
+struct column
+    var name=null
+    var type=null
+    var data=new string
+end
+
+function convert(stmt)
+    var data=new array
+    stmt.exec()
+    while !stmt.done()
+        var column_count=stmt.column_count()-1
+        var row=new array
+        for i=0,i<=column_count,++i
+            var dat=new record
+            dat.name=stmt.column_name(i)
+            dat.type=stmt.column_decltype(i)
+            dat.sql_type=stmt.column_type(i)
+            dat.data=stmt.column_text(i)
+            row.push_back(dat)
+        end
+        data.push_back(row)
+        stmt.exec()
+    end
+    return data
+end
+
+function table_list(db)
+    var tables=convert(db.prepare("select name from sqlite_master where type=\'table\' order by name"))
+    var table_list=new array
+    foreach row in tables
+        foreach col in row
+            table_list.push_back(col.data)
+        end
+    end
+    return move(table_list)
+end
+
+function column_info(db,table)
+    var info=convert(db.prepare("select sql from sqlite_master where tbl_name = \'"+table+"\' and type=\'table\'"))[0][0].data
+    var list=regex.build("^.+\\((.*)\\)$").match(info).str(1).split({','})
+    var res=new array
+    foreach it in list
+        var col=new column
+        var _col=it.split({' ','\t','\n'})
+        col.name=_col[0]
+        col.type=_col[1]
+        res.push_back(move(col))
+    end
+    return move(res)
+end
+
+@begin
+constant sqlite3_typenames = {
+    csdbc.sql_int:"INT",
+    csdbc.sql_real:"REAL",
+    csdbc.sql_text:"TEXT"
+}.to_hash_map()
+@end
+
+class statement extends csdbc.statement_base
+    var stmt = null
+    function exec() override
+        return convert(stmt)
+    end
+    function just_exec() override
+        loop
+            stmt.exec()
+        until stmt.done()
+    end
+    function bind(idx, val) override
+        stmt.bind_text(idx + 1, to_string(val))
+    end
+end
+
+class sqlite3 extends csdbc.database_base
+    var db = null
+    function initialize()
+        this.typenames = sqlite3_typenames
+        this.typenames_full = sqlite3_typenames
+    end
+    function prepare(sql) override
+        var stmt = new statement
+        stmt.stmt = db.prepare(sql)
+        return move(stmt)
+    end
+    function exec(sql) override
+        return global.convert(db.prepare(sql))
+    end
+    function just_exec(sql) override
+        db.prepare(sql).exec()
+    end
+    function table_list() override
+        return global.table_list(db)
+    end
+    function column_info(table) override
+        return global.column_info(db, table)
+    end
+end
+
+function open(path)
+    var adapter = new sqlite3
+    adapter.db = sqlite.open(path)
+    return move(adapter)
+end
