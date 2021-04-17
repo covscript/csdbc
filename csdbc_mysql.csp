@@ -121,3 +121,15 @@ function connect(cfg)
     adapter.db = database.connect_ds(config.name, config.user, config.pass)
     return move(adapter)
 end
+
+function connect_ds(name, user, pass)
+    var adapter = new mysql
+    adapter.db = database.connect_ds(name, user, pass)
+    return move(adapter)
+end
+
+function connect_str(str)
+    var adapter = new mysql
+    adapter.db = database.connect(str)
+    return move(adapter)
+end

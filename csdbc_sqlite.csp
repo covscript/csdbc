@@ -75,6 +75,7 @@ constant sqlite3_typenames = {
 @end
 
 class statement extends csdbc.statement_base
+    var bind_cache = new array
     var stmt = null
     function exec() override
         return convert(stmt)
@@ -85,7 +86,8 @@ class statement extends csdbc.statement_base
         until stmt.done()
     end
     function bind(idx, val) override
-        stmt.bind_text(idx + 1, to_string(val))
+        bind_cache[idx] = to_string(val)
+        stmt.bind_text(idx + 1, bind_cache[idx])
     end
 end
 
