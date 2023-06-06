@@ -38,6 +38,7 @@ function convert(stmt)
         data.push_back(row)
         stmt.exec()
     end
+    stmt.reset()
     return data
 end
 
@@ -84,6 +85,7 @@ class statement extends csdbc.statement_base
         loop
             stmt.exec()
         until stmt.done()
+        stmt.reset()
     end
     function bind(idx, val) override
         bind_cache[idx] = to_string(val)
