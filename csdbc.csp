@@ -11,6 +11,9 @@ class statement_base
     function exec()
         return null
     end
+    function fast_exec()
+        return null
+    end
     function just_exec()
     end
     function bind(idx, str)
@@ -24,6 +27,9 @@ class database_base
         return null
     end
     function exec(sql)
+        return null
+    end
+    function fast_exec(sql)
         return null
     end
     function just_exec(sql)

@@ -3,7 +3,7 @@
     "Name": "csdbc_sqlite",
     "Info": "CSDBC SQLite3 Driver",
     "Author": "CovScript Organization",
-    "Version": "1.0.3",
+    "Version": "1.1.1",
     "Target": "csdbc_sqlite.csp",
     "Dependencies": [
         "sqlite",

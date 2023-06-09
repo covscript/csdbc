@@ -3,7 +3,7 @@
     "Name": "csdbc",
     "Info": "CovScript Database Connectivity Header",
     "Author": "CovScript Organization",
-    "Version": "1.0.1",
+    "Version": "1.1.1",
     "Target": "csdbc.csp",
     "Dependencies": []
 }

@@ -3,7 +3,7 @@
     "Name": "csdbc_mysql",
     "Info": "CSDBC MySQL Driver",
     "Author": "CovScript Organization",
-    "Version": "1.0.2",
+    "Version": "1.1.1",
     "Target": "csdbc_mysql.csp",
     "Dependencies": [
         "database",

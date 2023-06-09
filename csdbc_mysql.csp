@@ -36,6 +36,19 @@ function convert(stmt)
     return data
 end
 
+function fast_convert(stmt)
+    var data=new array
+    while !stmt.done()
+        var column_count=stmt.column_count()-1
+        var row=new array
+        for i=0,i<=column_count,++i
+            row.push_back(stmt.get(i))
+        end
+        data.push_back(row)
+    end
+    return data
+end
+
 function table_list(db)
     var tables=convert(db.exec("SELECT TABLE_NAME FROM information_schema.TABLES"))
     var table_list=new array
@@ -80,6 +93,9 @@ class statement extends csdbc.statement_base
     function exec() override
         return convert(stmt.exec())
     end
+    function fast_exec() override
+        return fast_convert(stmt.exec())
+    end
     function just_exec() override
         stmt.just_exec()
     end
@@ -102,6 +118,9 @@ class mysql extends csdbc.database_base
     end
     function exec(sql) override
         return global.convert(db.exec(sql))
+    end
+    function fast_exec(sql) override
+        return global.fast_convert(db.exec(sql))
     end
     function just_exec(sql) override
         db.just_exec(sql)
